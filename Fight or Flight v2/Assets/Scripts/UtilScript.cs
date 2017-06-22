@@ -22,4 +22,11 @@ public class UtilScript : MonoBehaviour {
 		return num;
 	}
 
+	public static void AlignRectTransformToParent( RectTransform rectTransform){
+		rectTransform.localPosition = new Vector3(0f, 0f, 0f);
+		rectTransform.localRotation = Quaternion.identity;
+		rectTransform.localScale = new Vector3(1f, 1f, 1f);
+		
+	}
+
 }

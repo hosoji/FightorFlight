@@ -5,51 +5,86 @@ using UnityEngine;
 
 public class PlayerControl: MonoBehaviour {
 
-	Vector3 pos, posTemp;
+	Vector3 pos;
+	Transform tr;
+
+
 	public float speed;
 	public float gridSize;
 	public float turnAmount;
 
+	public int energyCost = 1;
+
 
 	bool isRotating;
 	public static bool canMove = true;
+	public RaycastHit hit;
 
-
-	public KeyCode forward;
-	public KeyCode turnRight;
-	public KeyCode turnLeft;
-	public KeyCode back;
+	KeyCode forward = KeyCode.W;
+	KeyCode turnRight = KeyCode.D;
+	KeyCode turnLeft = KeyCode.A;
+	KeyCode back = KeyCode.S;
 
 	private const float ANGLE_ROTATION = 30;
 
+	enum Orientation{
+		NORTH,
+		EAST,
+		SOUTH,
+		WEST
+	}
+
+	Orientation myOrientation;
 
 
-	// Use this for initialization
 	void Start () {
-		pos = transform.position;   // For getting the initial position
+		myOrientation = Orientation.NORTH;
 
+		tr = transform;
+		pos = transform.position;   // For getting the initial position
 
 	}
 
-	// Update is called once per frame
+
 	void Update () {
 
-		Vector3 fwd = transform.TransformDirection(Vector3.forward);
 
-		RaycastHit hit;
-
-		if (Physics.Raycast (transform.position, fwd, out hit, gridSize + 1)) {
-			canMove = false;
-			//			Debug.Log ("Player movement is blocked in this direction by " + hit.transform.name);
-		} else if (isRotating) {
-			canMove = false;
+		// Assign Controls based on Orientation State
+		if (myOrientation == Orientation.NORTH) {
+			AssignControls (KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.W);	
+		} else if (myOrientation == Orientation.WEST) {
+			AssignControls (KeyCode.S, KeyCode.D, KeyCode.W, KeyCode.A);
+		} else if (myOrientation == Orientation.SOUTH) {
+			AssignControls (KeyCode.D, KeyCode.W, KeyCode.A, KeyCode.S);
 		} else {
-			canMove = true;
+			AssignControls (KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D);
 		}
 
-		MovePlayer ();
 
 		if (transform.position == pos) {
+
+
+			// Check for Colliders Blocking Path
+			Vector3 fwd = transform.TransformDirection(Vector3.forward);
+
+
+			if (Physics.Raycast (transform.position, fwd, out hit, gridSize)) {
+				canMove = false;
+				//			Debug.Log ("Player blocked by: " + hit.transform.parent.name + "-" + hit.transform.name);
+			} else if (isRotating) {
+				canMove = false;
+			} else {
+				if (GameManager.energy - energyCost >= 0) {
+					canMove = true;
+				} else {
+					canMove = false;
+				}
+			}
+
+//			Debug.DrawRay (transform.position, fwd, Color.white, gridSize);
+
+
+			// Adjust Player Position
 
 
 			if (Input.GetKeyDown (turnLeft)) {
@@ -57,63 +92,105 @@ public class PlayerControl: MonoBehaviour {
 				if (!isRotating) {
 					StartCoroutine (RotatePlayer (-1));
 
+					if (myOrientation == Orientation.NORTH) {
+						myOrientation = Orientation.WEST;	
+					} else if (myOrientation == Orientation.WEST) {
+						myOrientation = Orientation.SOUTH;	
+					} else if (myOrientation == Orientation.SOUTH) {
+						myOrientation = Orientation.EAST;	
+					} else {
+						myOrientation = Orientation.NORTH;
+					}
+
 				}
-
+	
 			}
-
-
+				
 			if (Input.GetKeyDown (turnRight)) {
 
 				if (!isRotating) {
 					StartCoroutine (RotatePlayer (1));
 
+					if (myOrientation == Orientation.NORTH) {
+						myOrientation = Orientation.EAST;	
+					} else if (myOrientation == Orientation.EAST) {
+						myOrientation = Orientation.SOUTH;	
+					} else if (myOrientation == Orientation.SOUTH) {
+						myOrientation = Orientation.WEST;	
+					} else {
+						myOrientation = Orientation.NORTH;
+					}
+
 				}
 			}
 
 			if (Input.GetKeyDown (back)){
-				if (canMove) {
+
+				if (!isRotating) {
 					//					pos = posTemp; 
 					//					GameManager.energy = GameManager.energy - 2;
 					StartCoroutine (RotatePlayer (1));
 					StartCoroutine (RotatePlayer (1));
+
+
+					if (myOrientation == Orientation.NORTH) {
+						myOrientation = Orientation.SOUTH;	
+					} else if (myOrientation == Orientation.EAST) {
+						myOrientation = Orientation.WEST;	
+					} else if (myOrientation == Orientation.SOUTH) {
+						myOrientation = Orientation.NORTH;	
+					} else {
+						myOrientation = Orientation.EAST;
+					}
+
 				} else {
 
 				}
 			}
 
-			if (GameManager.energy > 0) {
 
-				if (Input.GetKey (forward)) {
-					if (!isRotating) {
-						if (canMove) {
-							posTemp = pos;
-							pos = pos + (transform.forward * gridSize); 
-							GameManager.energy--;
+			if (Input.GetKeyDown (forward)) {
+				if (!isRotating) {
+					if (canMove) {
+						pos = pos + (transform.forward * gridSize);
+						GameManager.energy = GameManager.energy - energyCost;
 
-						} else {
 
-						}
-					}
-				}
 
-				if (Input.GetKey (turnLeft)) {
-					if (!isRotating && canMove) {
-						pos = pos + ((transform.forward) * gridSize); 
-						GameManager.energy--;
-					}
-				}
+					} else {
 
-				if (Input.GetKey (turnRight)) {
-					if (!isRotating && canMove) {
-						pos = pos + (transform.forward * gridSize); 
-						GameManager.energy--;
 					}
 				}
 			}
 
-		}
+//				else if (Input.GetKey (turnLeft)) {
+//					if (!isRotating && canMove) {
+//						pos = pos + ((transform.forward) * gridSize); 
+//						GameManager.energy = GameManager.energy - energyCost;
+//					}
+//				}
+//
+//				else if (Input.GetKey (turnRight)) {
+//					if (!isRotating && canMove) {
+//						pos = pos + (transform.forward * gridSize); 
+//						GameManager.energy = GameManager.energy - energyCost;
+//					}
+//				}
+//
+//				else if (Input.GetKey (back)) {
+//					if (!isRotating && canMove) {
+//						pos = pos + (transform.forward * gridSize); 
+//						GameManager.energy = GameManager.energy - energyCost;
+//					}
+//				}
+				
 
+			MovePlayer ();
+		}
 	}
+
+
+
 
 	IEnumerator RotatePlayer(int mod){
 
@@ -133,6 +210,24 @@ public class PlayerControl: MonoBehaviour {
 		transform.position = Vector3.MoveTowards (transform.position, pos, Time.deltaTime * speed);
 
 	}
+
+	void AssignControls(KeyCode left, KeyCode down, KeyCode right, KeyCode up){
+		forward = up;
+		turnRight = right;
+		turnLeft = left;
+		back = down;
+		
+	}
+
+	void KeepMoving(KeyCode key){
+		if (Input.GetKey(key)){
+			if (canMove && !isRotating){
+				pos = pos + (transform.forward * gridSize);
+				GameManager.energy = GameManager.energy - energyCost;
+			}
+		}
+	}
+
 
 
 }

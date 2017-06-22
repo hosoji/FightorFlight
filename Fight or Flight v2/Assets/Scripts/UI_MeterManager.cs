@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_HUDManager : MonoBehaviour {
+public class UI_MeterManager : MonoBehaviour {
 
-	public Image energyAmount;
+//	public Image energyAmount;
 
 	public GameObject compUnitObject;
 
 	GameObject compUnitHolder;
 
-	public Transform uiBase;
+	UI_EnergyManager energyManager;
+
+//	public Transform uiBase;
 
 	public Color colorLow1, colorHigh1, colorLow2, colorHigh2, colorLow3, colorHigh3;
+	Color blankInner = new Color(1,1,1,0.5f);
+	Color blankOuter = new Color(1,1,1,0.2f);
+
 
 	Image compUnitImg;
 
@@ -29,18 +34,22 @@ public class UI_HUDManager : MonoBehaviour {
 		compUnitHolder = GameObject.Find ("Composure Segments Holder");
 		compUnitImg = compUnitObject.GetComponent<Image>();
 
+		energyManager = GetComponent<UI_EnergyManager> ();
+
+
 		for (int i = 0; i < GameManager.composure; i++) {
 			float mod = 1f;
 
-			Vector3 pos = new Vector3 (uiBase.position.x + ((compUnitImg.rectTransform.rect.width * mod) * i), uiBase.position.y, uiBase.position.z);
+			Vector3 pos = new Vector3 ((compUnitImg.rectTransform.rect.width * mod) * i, 0,0);
+			
 			GameObject image = Instantiate (compUnitObject, pos, Quaternion.identity) as GameObject;
 
 
-			image.transform.SetParent (compUnitHolder.transform);
+			image.transform.SetParent (compUnitHolder.transform,false);
 			image.name = i.ToString (); 
 
 			Image img = image.GetComponent<Image> ();
-			img.color = new Color(1,1,1,0.2f);
+			img.color = blankOuter;
 
 			compSegments.Add (image);
 		}
@@ -57,11 +66,11 @@ public class UI_HUDManager : MonoBehaviour {
 //		composure = GameManager.composure - 1;
 
 	
-
-		float energyFill = UtilScript.remapRange (GameManager.energy, 0, 20, 0, 1);
-		energyAmount.fillAmount = energyFill;
-
-		
+//
+//		float energyFill = UtilScript.remapRange (GameManager.energy, 0, 10, 0, 1);
+//		energyAmount.fillAmount = energyFill;
+//
+//		
 	}
 		
 
@@ -70,7 +79,8 @@ public class UI_HUDManager : MonoBehaviour {
 		if (index >= (composure-n)) {
 			StopAllCoroutines ();
 
-			StartCoroutine ("SegmentMoveUp");
+			float bMod = 0.1f;
+			StartCoroutine ("SegmentMoveUp", bMod );
 
 		}
 		for (int i = 0; i < n; i++) {
@@ -94,9 +104,9 @@ public class UI_HUDManager : MonoBehaviour {
 
 
 			float mod = 1f;
-			Vector3 pos = new Vector3 (seg.transform.position.x + ((compUnitImg.rectTransform.rect.width * mod) * 1), seg.transform.position.y, seg.transform.position.z);
+			Vector3 pos = new Vector3 ((compUnitImg.rectTransform.rect.width * mod) * (composure+1), 0, 0);
 			GameObject image = Instantiate (compUnitObject, pos, Quaternion.identity) as GameObject;
-			image.transform.SetParent (compUnitHolder.transform);
+			image.transform.SetParent (compUnitHolder.transform,false);
 
 			GameManager.composure++;
 			image.name = (composure + 1).ToString();
@@ -105,12 +115,13 @@ public class UI_HUDManager : MonoBehaviour {
 		}
 	}
 
-	IEnumerator SegmentMoveUp(){
+	IEnumerator SegmentMoveUp(float b){
 
 		for (int i = 1; i < compSegments.Count; i++) {
 
+
 //			float mod = 1f/(i+1);
-			float mod = (i+1)*0.01f;
+			float mod = (i+1)*0.01f + b;
 
 			Image img = compSegments[i].GetComponent<Image> ();
 			index = UtilScript.ConvertStringtoInt (img.name);
@@ -125,7 +136,7 @@ public class UI_HUDManager : MonoBehaviour {
 
 			yield return new WaitForSeconds(mod);
 			if (i < compSegments.Count - 1) {
-				img.color = new Color(1,1,1,0.2f);
+				img.color = blankInner;
 			} else {
 				StartCoroutine ("SegmentMoveDown");
 			}
@@ -155,13 +166,14 @@ public class UI_HUDManager : MonoBehaviour {
 	
 			yield return new WaitForSeconds(0.07f);
 			if (i > 0) {
-				img.color = new Color(1,1,1,0.2f);
+				img.color = blankOuter;
 			} else {
 				
 				if (composure > 1) {
 					RemoveSegment (1);
+//					energyManager.AddSegment (1);
 				}
-				StartCoroutine ("SegmentMoveUp");
+				StartCoroutine ("SegmentMoveUp", 0);
 			}
 		}
 	}

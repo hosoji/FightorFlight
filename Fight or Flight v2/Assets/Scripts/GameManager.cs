@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
@@ -8,22 +9,30 @@ public class GameManager : MonoBehaviour {
 
 	public static int composure;
 
-	public int startValue;
+	public int startValue = 20;
+	public static int maxValue = 30;
 
-	UI_HUDManager hud;
+
+	public float startEnergy = 7;
+	public static float maxEnergy = 10;
+
+	UI_MeterManager hud;
+
+
 
 	// Use this for initialization
 	void Awake () {
-		energy = 20;
+		energy = startEnergy;
 		composure = startValue;
 
-		hud = GetComponent<UI_HUDManager> ();
+		hud = GetComponent<UI_MeterManager> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 //		Debug.Log("Energy: " + energy);
 //		Debug.Log("Composure: " + composure);
+
 
 		if (Input.GetKeyDown (KeyCode.C)) {
 			int i = 5;
@@ -33,10 +42,13 @@ public class GameManager : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown (KeyCode.X)) {
-			if (composure <= startValue) {
-				hud.AddSegment (3);
+			int i = 3;
+			if (composure + i <= startValue) {
+				hud.AddSegment (i);
 			}
 		}
 		
 	}
+
+
 }

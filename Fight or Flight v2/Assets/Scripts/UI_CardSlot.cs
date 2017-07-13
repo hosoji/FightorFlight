@@ -9,15 +9,9 @@ public class UI_CardSlot : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		panel = infoPanel.GetComponent<UI_CardPanel> ();	
+	}
 
-		panel = infoPanel.GetComponent<UI_CardPanel> ();
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
 	public void GetCardInfo(){
 		Card info = GetComponentInChildren<Card> ();
@@ -28,10 +22,7 @@ public class UI_CardSlot : MonoBehaviour {
 			Debug.Log ("No Card Selected");
 			infoPanel.SetActive (false);
 		}
-
-
 	}
-
 
 
 }

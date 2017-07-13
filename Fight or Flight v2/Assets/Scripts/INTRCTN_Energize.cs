@@ -6,13 +6,16 @@ public class INTRCTN_Energize : MonoBehaviour {
 
 	Card card;
 	UI_CardPanel panel;
+	UI_CardLoader loader;
 	UI_MeterManager hud ;
 
 	void Start(){
 		GameObject gameManager = GameObject.FindGameObjectWithTag ("GameManager");
+		GameObject cardManager = GameObject.FindGameObjectWithTag ("CardManager");
 
 		hud = gameManager.GetComponent<UI_MeterManager> ();
 		panel = GetComponentInParent<UI_CardPanel> ();
+		loader = cardManager.GetComponent<UI_CardLoader> ();
 
 	}
 
@@ -25,14 +28,16 @@ public class INTRCTN_Energize : MonoBehaviour {
 		if (GameManager.energy + amount <= GameManager.maxEnergy) {
 			GameManager.energy = GameManager.energy + amount;
 
-			Destroy (card.gameObject);
+			loader.DeactivateCard (card.gameObject,true);
+//			Destroy (card.gameObject);
 
 			panel.DisablePanel ();
 		} else {
 			if (GameManager.energy < GameManager.maxEnergy) {
 				
 				GameManager.energy = GameManager.energy + (GameManager.maxEnergy - GameManager.energy);
-				Destroy (card.gameObject);
+				loader.DeactivateCard (card.gameObject,true);
+//				Destroy (card.gameObject);
 				panel.DisablePanel ();
 			} else {
 				Debug.Log ("Energy is Full");

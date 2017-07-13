@@ -7,22 +7,20 @@ public class INTRCTN_Carry : MonoBehaviour {
 	
 	Card card;
 	UI_CardPanel panel;
+	UI_CardLoader loader;
 	UI_MeterManager hud ;
 
 	void Start(){
 		
 		GameObject gameManager = GameObject.FindGameObjectWithTag ("GameManager");
+		GameObject cardManager = GameObject.FindGameObjectWithTag ("CardManager");
 
-
+		loader = cardManager.GetComponent<UI_CardLoader> ();
 		hud = gameManager.GetComponent<UI_MeterManager> ();
 		panel = GetComponentInParent<UI_CardPanel> ();
-
-
 	}
 
 	public void Carry(){
-
-
 
 		int amount = card.equipCost;
 
@@ -40,21 +38,20 @@ public class INTRCTN_Carry : MonoBehaviour {
 				
 				if (GameManager.composure - amount > 0) {
 					hud.RemoveSegment (amount);
+
+					loader.AddtoCarry (card.gameObject);
+
+					card.gameObject.transform.SetParent (equipSlots [equipSlots.Length - i].transform, false);
+
+					card.mySlotState = Card.SlotState.EQUIP_SLOT;
 				} else {
 					print ("Not enough composure");
 				}
 
-				card.gameObject.transform.SetParent (equipSlots [equipSlots.Length - i].transform, false);
-
-				card.mySlotState = Card.SlotState.EQUIP_SLOT;
-
 				panel.DisablePanel ();
 				break;
 			}
-					
-
-
-
+	
 		}
 	}
 

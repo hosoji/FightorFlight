@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActionCard : Card {
-
-
+public class ClimbOver : Card {
 
 	// Use this for initialization
 	void Start () {
+		SetUp ();
+	}
+
+	protected override void SetUp ()
+	{
 		base.SetUp ();
 	}
 
@@ -16,12 +19,13 @@ public class ActionCard : Card {
 		base.Update ();
 	}
 
-	protected override void CardAbility(){
-
+	protected override void CardAbility ()
+	{
 		GameObject player = GameObject.FindGameObjectWithTag ("Player");
 		PlayerController control = player.GetComponent<PlayerController> ();
 
 		control.MoveMultipleUnits (2);
-
 	}
+
+
 }

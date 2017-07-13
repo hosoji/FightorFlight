@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class UI_EquipSlot : MonoBehaviour {
 
+	UI_MeterManager hud ;
+
+	void Start(){
+		GameObject gameManager = GameObject.FindGameObjectWithTag ("GameManager");
+
+		hud = gameManager.GetComponent<UI_MeterManager> ();
+	}
 
 	public bool SlotAvailable(){
 		Card info = GetComponentInChildren<Card> ();
@@ -16,9 +23,26 @@ public class UI_EquipSlot : MonoBehaviour {
 	}
 
 	public void ActivateSlotFunction(){
-		Card info = GetComponentInChildren<Card> ();
-		if (info != null) {
-			Debug.Log ("Card Name is: " + info.gameObject.name);
+		Card card = GetComponentInChildren<Card> ();
+		if (card != null) {
+			Debug.Log ("Card Name is: " + card.gameObject.name);
+
+			int amount = card.useCost;
+
+			if (GameManager.composure - amount > 0) {
+				card.AccessAbility ();
+
+				if (PlayerController.actionSuccessful) {
+					hud.RemoveSegment (amount);
+
+					PlayerController.actionSuccessful = false;
+				}
+
+			} else {
+
+				print ("Not Enough Composure");
+
+			}
 
 		} else {
 			Debug.Log ("No Card Selected");

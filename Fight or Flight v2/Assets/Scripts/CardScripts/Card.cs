@@ -72,10 +72,7 @@ public class Card : MonoBehaviour {
 			rectTransform.sizeDelta = new Vector2(w,h);
 		}
 	}
-
-//	protected virtual void OnMouseOver(){
-
-//	}
+		
 
 	public void AccessAbility(){
 		CardAbility ();

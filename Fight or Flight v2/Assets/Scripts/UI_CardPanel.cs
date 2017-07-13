@@ -20,7 +20,6 @@ public class UI_CardPanel : MonoBehaviour {
 		for (int i = 0; i < buttons.Length; i++) {
 			Destroy (buttons [i]);
 		}
-
 	}
 
 	public void DisablePanel(){

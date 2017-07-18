@@ -8,7 +8,7 @@ public class INTRCTN_Discard : MonoBehaviour {
 	UI_CardPanel panel;
 	UI_CardLoader loader;
 	UI_MeterManager mm ;
-	UI_EnergyManager em;
+//	UI_EnergyManager em;
 
 	void Start(){
 		GameObject gameManager = GameObject.FindGameObjectWithTag ("GameManager");
@@ -17,7 +17,7 @@ public class INTRCTN_Discard : MonoBehaviour {
 		panel = GetComponentInParent<UI_CardPanel> ();
 		loader = cardManager.GetComponent<UI_CardLoader> ();
 		mm = gameManager.GetComponent<UI_MeterManager> ();
-		em = gameManager.GetComponent<UI_EnergyManager> ();
+//		em = gameManager.GetComponent<UI_EnergyManager> ();
 
 	}
 
@@ -29,18 +29,15 @@ public class INTRCTN_Discard : MonoBehaviour {
 
 		if (GameManager.composure + amount <= GameManager.maxValue) {
 			mm.AddSegment (amount);
-//			em.RemoveSegment (amount);
+
 			loader.DeactivateCard(card.gameObject,true);
-//			Destroy (card.gameObject);
 
 			panel.DisablePanel ();
 
 		} else {
 			if (GameManager.composure < GameManager.maxValue) {
 				mm.AddSegment (GameManager.maxValue - GameManager.composure);
-//				em.RemoveSegment (GameManager.maxValue - GameManager.composure);
 
-//				Destroy (card.gameObject);
 				loader.DeactivateCard(card.gameObject,true);
 
 

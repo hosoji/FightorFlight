@@ -7,13 +7,13 @@ public class INTRCTN_Energize : MonoBehaviour {
 	Card card;
 	UI_CardPanel panel;
 	UI_CardLoader loader;
-	UI_MeterManager hud ;
+//	UI_MeterManager hud ;
 
 	void Start(){
-		GameObject gameManager = GameObject.FindGameObjectWithTag ("GameManager");
+//		GameObject gameManager = GameObject.FindGameObjectWithTag ("GameManager");
 		GameObject cardManager = GameObject.FindGameObjectWithTag ("CardManager");
 
-		hud = gameManager.GetComponent<UI_MeterManager> ();
+//		hud = gameManager.GetComponent<UI_MeterManager> ();
 		panel = GetComponentInParent<UI_CardPanel> ();
 		loader = cardManager.GetComponent<UI_CardLoader> ();
 

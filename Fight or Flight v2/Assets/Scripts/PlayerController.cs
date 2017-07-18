@@ -196,6 +196,7 @@ public class PlayerController: MonoBehaviour {
 			if (Physics.Raycast (transform.position, fwd, out hit, gridSize * units)) {
 				print ("Can't Climb Over");
 				tempHit.layer = 0;
+				actionSuccessful = false;
 			} else {
 				actionSuccessful = true;
 				for (int i = 0; i < units; i++) {

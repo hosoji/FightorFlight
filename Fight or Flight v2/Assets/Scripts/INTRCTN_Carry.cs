@@ -18,18 +18,19 @@ public class INTRCTN_Carry : MonoBehaviour {
 		loader = cardManager.GetComponent<UI_CardLoader> ();
 		hud = gameManager.GetComponent<UI_MeterManager> ();
 		panel = GetComponentInParent<UI_CardPanel> ();
+
+
 	}
 
 	public void Carry(){
 
 		int amount = card.equipCost;
 
-		int slotSize = card.slotSize;
-
 		int n = UI_CardPanel.slotNum - 1;
 		card = UI_CardLoader.slots [n].GetComponentInChildren<Card> ();
 
 		GameObject[] equipSlots = GameObject.FindGameObjectsWithTag ("EquipSlot");
+
 
 		for (int i = equipSlots.Length; i > 0; i--) {
 			UI_EquipSlot slot = equipSlots [equipSlots.Length - i].GetComponent<UI_EquipSlot> ();
@@ -63,5 +64,25 @@ public class INTRCTN_Carry : MonoBehaviour {
 
 		panel.SetPanelImage (sprite);
 	}
+
+
+	public void CheckCardType(){
+
+
+		if (card.myCardType == Card.CardType.ACTION_CARD) {
+			this.gameObject.SetActive (true);
+		} else if (card.myCardType == Card.CardType.CONSUMABLE_CARD) {
+			this.gameObject.SetActive (false);
+		} else if (card.myCardType == Card.CardType.POSSESSION_CARD) {
+			this.gameObject.SetActive (true);
+		} else if (card.myCardType == Card.CardType.BLANK_CARD) {
+			this.gameObject.SetActive (false);
+		} else {
+			this.gameObject.SetActive(false);
+		}	
+
+
+	}
+
 
 }

@@ -12,12 +12,16 @@ public class UI_CardLoader : MonoBehaviour {
 	public int loadTime = 3;
 	bool isLoading = false;
 
+	public bool blankFound;
+
 	GameObject drawnCard;
 
 	public List <GameObject> deck = new List<GameObject>();
 	public List <GameObject> hand = new List<GameObject>();
 	public List <GameObject> pile = new List<GameObject>();
 	public List <GameObject> equipped = new List<GameObject>();
+	public List <GameObject> searchableDeck = new List<GameObject> ();
+	public List <GameObject> searchables = new List<GameObject> ();
 	public List <GameObject> tempDeck = new List <GameObject> ();
 
 	void Start(){
@@ -25,9 +29,11 @@ public class UI_CardLoader : MonoBehaviour {
 			int n = i + 1;
 			string g = "Card Slot " + n.ToString ();
 			slots [i] = GameObject.Find (g);
+
 		}
 
-		InitializeDeck ();		
+		InitializeDeck (deck, tempDeck);
+		InitializeDeck (searchableDeck, searchables);
 	}
 
 	void Update(){
@@ -81,7 +87,10 @@ public class UI_CardLoader : MonoBehaviour {
 
 //			cards [i] = Instantiate(drawnCard,slots [i].transform.position,Quaternion.identity)  as GameObject;
 				cards [i] = drawnCard;
+
 				RectTransform rectTransform = cards [i].GetComponent<RectTransform> ();
+				UtilScript.AlignRectTransformToParent (rectTransform);
+
 				cards [i].transform.SetParent (slots [i].transform, false);
 				cards [i].SetActive (true);
 
@@ -98,7 +107,10 @@ public class UI_CardLoader : MonoBehaviour {
 				tempDeck.Remove (drawnCard);
 
 				cards [i] = drawnCard;
+
 				RectTransform rectTransform = cards [i].GetComponent<RectTransform> ();
+				UtilScript.AlignRectTransformToParent (rectTransform);
+
 				cards [i].transform.SetParent (slots [i].transform, false);
 				cards [i].SetActive (true);
 
@@ -136,12 +148,50 @@ public class UI_CardLoader : MonoBehaviour {
 		}
 	}
 
-	void InitializeDeck(){
-		for (int i = 0; i < deck.Count; i++) {
-			GameObject deckCard = Instantiate (deck [i], transform.position, Quaternion.identity);
+	public void CheckBlankCard( ){
+		for (int i = 0; i < slots.Length; i++) {
+			Card card = slots [i].GetComponentInChildren<Card> ();
+			if (card != null) {
+				if (card.myCardType == Card.CardType.BLANK_CARD) {
+					blankFound = true;
+					break;
+				} else {
+					blankFound = false;
+				}
+			}
+
+		}
+	}
+
+	public void ReplaceBlankCard(){
+		for (int i = 0; i < slots.Length; i++) {
+			Card card = slots [i].GetComponentInChildren<Card> ();
+			if (card != null) {
+				if (card.myCardType == Card.CardType.BLANK_CARD) {
+					GameObject newCard = searchables [Random.Range (0, searchables.Count)];
+
+					RectTransform rectTransform = newCard.GetComponent<RectTransform> ();
+					UtilScript.AlignRectTransformToParent (rectTransform);
+
+					newCard.transform.SetParent (slots [i].transform, false);
+					newCard.SetActive (true);
+					hand.Add (newCard);
+
+					DeactivateCard (card.gameObject, false);
+					break; 
+				} else {
+
+				}
+			}
+		}
+	}
+
+	void InitializeDeck(List<GameObject> origin, List<GameObject> target ){
+		for (int i = 0; i < origin.Count; i++) {
+			GameObject deckCard = Instantiate (origin[i], transform.position, Quaternion.identity);
 			deckCard.transform.SetParent (transform);
 			deckCard.SetActive (false);
-			tempDeck.Add (deckCard);
+			target.Add (deckCard);
 		}
 	}
 

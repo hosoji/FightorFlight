@@ -6,13 +6,16 @@ public class INTRCTN_Use : MonoBehaviour {
 
 	Card card;
 	UI_CardPanel panel;
+	UI_CardLoader loader;
 	UI_MeterManager hud ;
 
 	void Start(){
 		GameObject gameManager = GameObject.FindGameObjectWithTag ("GameManager");
+		GameObject cardManager = GameObject.FindGameObjectWithTag ("CardManager");
 
 		hud = gameManager.GetComponent<UI_MeterManager> ();
 		panel = GetComponentInParent<UI_CardPanel> ();
+		loader = cardManager.GetComponent<UI_CardLoader> ();
 
 
 	}
@@ -28,6 +31,8 @@ public class INTRCTN_Use : MonoBehaviour {
 
 			if (PlayerController.actionSuccessful) {
 				hud.RemoveSegment (amount);
+
+				loader.DeactivateCard (card.gameObject,true);
 
 				panel.DisablePanel ();
 				PlayerController.actionSuccessful = false;

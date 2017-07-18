@@ -11,7 +11,7 @@ public class UI_MeterManager : MonoBehaviour {
 
 	GameObject compUnitHolder;
 
-	UI_EnergyManager energyManager;
+//	UI_EnergyManager energyManager;
 
 //	public Transform uiBase;
 
@@ -34,7 +34,7 @@ public class UI_MeterManager : MonoBehaviour {
 		compUnitHolder = GameObject.Find ("Composure Segments Holder");
 		compUnitImg = compUnitObject.GetComponent<Image>();
 
-		energyManager = GetComponent<UI_EnergyManager> ();
+//		energyManager = GetComponent<UI_EnergyManager> ();
 
 
 		for (int i = 0; i < GameManager.composure; i++) {
@@ -62,15 +62,6 @@ public class UI_MeterManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-//		print (index);
-//		composure = GameManager.composure - 1;
-
-	
-//
-//		float energyFill = UtilScript.remapRange (GameManager.energy, 0, 10, 0, 1);
-//		energyAmount.fillAmount = energyFill;
-//
-//		
 	}
 		
 

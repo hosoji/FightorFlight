@@ -11,9 +11,17 @@ public class Card : MonoBehaviour {
 
 	public Sprite use, discard, energize, carry;
 
-	GameObject gameManager;
+	protected GameObject gameManager;
+	protected GameObject cardManager;
 
-	UI_MeterManager hud;
+
+	RectTransform rectTransform;
+
+	protected UI_MeterManager hud;
+
+
+
+	protected UI_CardLoader loader;
 	
 	protected float energy = GameManager.energy;
 
@@ -24,18 +32,27 @@ public class Card : MonoBehaviour {
 	public int useCost;
 	public int equipCost;
 
-	public int slotSize;
-
-	public Sprite sprite1, sprite2;
+	public Sprite cardSprite, equipSprite;
 
 	public enum SlotState{
 		CARD_SLOT,
 		EQUIP_SLOT,
 	}
 
+	public enum CardType{
+		ACTION_CARD,
+		CONSUMABLE_CARD,
+		POSSESSION_CARD,
+		BLANK_CARD,
+		PANIC_CARD,
+	}
+
 	public SlotState mySlotState;
 
-	void Start(){
+	public CardType myCardType;
+
+
+	void Awake(){
 		SetUp ();
 
 	}
@@ -43,32 +60,32 @@ public class Card : MonoBehaviour {
 	protected virtual void SetUp(){
 
 		mySlotState = SlotState.CARD_SLOT;
+		rectTransform = GetComponent<RectTransform> ();
 
+		cardManager = GameObject.FindGameObjectWithTag ("CardManager");
 
+		gameManager = GameObject.FindGameObjectWithTag ("GameManager");
 
-		gameManager = GameObject.Find ("GameManager");
 
 		hud = gameManager.GetComponent<UI_MeterManager> ();
 
+		loader = cardManager.GetComponent<UI_CardLoader> ();
+
 		cardImage = GetComponent<Image> ();
+
+
 
 	}
 
 	protected virtual void Update(){
-		RectTransform rectTransform = GetComponent<RectTransform> ();
 
 		float w = 184f;
 		float h = 56f;
 
-		// For getting UI object to parent's position 
-		if (rectTransform != null) {
-			UtilScript.AlignRectTransformToParent (rectTransform);
-		}
-
 		if (mySlotState == SlotState.CARD_SLOT) {
-			cardImage.sprite = sprite1;
+			cardImage.sprite = cardSprite;
 		} else {
-			cardImage.sprite = sprite2;
+			cardImage.sprite = equipSprite;
 			rectTransform.sizeDelta = new Vector2(w,h);
 		}
 	}
@@ -77,8 +94,10 @@ public class Card : MonoBehaviour {
 	public void AccessAbility(){
 		CardAbility ();
 	}
+		
 
 	protected virtual void CardAbility(){
 	}
+
 
 }

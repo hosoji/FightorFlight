@@ -26,7 +26,7 @@ public class INTRCTN_Use : MonoBehaviour {
 
 		int amount = card.useCost;
 
-		if (GameManager.composure - amount > 0) {
+		if (GameManager.composure - amount > 1) {
 			card.AccessAbility ();
 
 			if (PlayerController.actionSuccessful) {

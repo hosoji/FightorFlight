@@ -27,21 +27,25 @@ public class UI_EquipSlot : MonoBehaviour {
 		if (card != null) {
 			Debug.Log ("Card Name is: " + card.gameObject.name);
 
-			int amount = card.useCost;
+			if (card.myCardType == Card.CardType.ACTION_CARD) {
+				int amount = card.useCost;
 
-			if (GameManager.composure - amount > 0) {
-				card.AccessAbility ();
+				if (GameManager.composure - amount > 0) {
+					card.AccessAbility ();
 
-				if (PlayerController.actionSuccessful) {
-					hud.RemoveSegment (amount);
+					if (PlayerController.actionSuccessful) {
+						hud.RemoveSegment (amount);
 
-					PlayerController.actionSuccessful = false;
+						PlayerController.actionSuccessful = false;
+					}
+
+				} else {
+
+					print ("Not Enough Composure");
+
 				}
-
 			} else {
-
-				print ("Not Enough Composure");
-
+				Debug.Log ("Not an Action Card");
 			}
 
 		} else {
@@ -49,6 +53,6 @@ public class UI_EquipSlot : MonoBehaviour {
 
 		}
 
-
 	}
+
 }

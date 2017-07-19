@@ -168,7 +168,10 @@ public class UI_CardLoader : MonoBehaviour {
 			Card card = slots [i].GetComponentInChildren<Card> ();
 			if (card != null) {
 				if (card.myCardType == Card.CardType.BLANK_CARD) {
-					GameObject newCard = searchables [Random.Range (0, searchables.Count)];
+					int rnd = Random.Range (0, searchables.Count);
+
+					GameObject newCard = searchables [rnd];
+
 
 					RectTransform rectTransform = newCard.GetComponent<RectTransform> ();
 					UtilScript.AlignRectTransformToParent (rectTransform);
@@ -176,6 +179,7 @@ public class UI_CardLoader : MonoBehaviour {
 					newCard.transform.SetParent (slots [i].transform, false);
 					newCard.SetActive (true);
 					hand.Add (newCard);
+					searchables.Remove(searchables[rnd]);
 
 					DeactivateCard (card.gameObject, false);
 					break; 

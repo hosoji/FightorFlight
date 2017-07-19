@@ -43,6 +43,13 @@ public class UI_CardSlot : MonoBehaviour {
 					panel.EnableEnergize (false);
 					break;
 
+				case Card.CardType.POSSESSION_CARD:
+					panel.EnableCarry (true);
+					panel.EnableUse (false);
+					panel.EnableDiscard (true);
+					panel.EnableEnergize (false);
+					break;
+
 			}
 				
 

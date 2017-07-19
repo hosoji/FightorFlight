@@ -54,6 +54,10 @@ public class INTRCTN_Carry : MonoBehaviour {
 			}
 	
 		}
+
+		if (card.myCardType == Card.CardType.POSSESSION_CARD) {
+			card.AccessAbility ();
+		}
 	}
 
 	public void CarryPanelInfo(){

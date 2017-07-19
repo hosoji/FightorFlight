@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour {
 	public float startEnergy = 7;
 	public static float maxEnergy = 10;
 
+	public static float meterMod;
+	float meterModStartValue = 13f;
+
 	UI_MeterManager hud;
 
 
@@ -26,6 +29,8 @@ public class GameManager : MonoBehaviour {
 		composure = startValue;
 
 		hud = GetComponent<UI_MeterManager> ();
+
+		meterMod = GetMeterMod (meterModStartValue);
 	}
 	
 	// Update is called once per frame
@@ -48,6 +53,10 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 		
+	}
+
+	public static float GetMeterMod(float num){
+		return num / 1000;
 	}
 
 

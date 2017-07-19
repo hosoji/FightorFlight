@@ -11,6 +11,7 @@ public class UI_MeterManager : MonoBehaviour {
 
 	GameObject compUnitHolder;
 
+
 //	UI_EnergyManager energyManager;
 
 //	public Transform uiBase;
@@ -112,7 +113,8 @@ public class UI_MeterManager : MonoBehaviour {
 
 
 //			float mod = 1f/(i+1);
-			float mod = (i+1)*0.01f + b;
+			float mod = (i+1)* GameManager.meterMod + b;
+
 
 			Image img = compSegments[i].GetComponent<Image> ();
 			index = UtilScript.ConvertStringtoInt (img.name);
@@ -175,6 +177,7 @@ public class UI_MeterManager : MonoBehaviour {
 		return lerpedColor;
 
 	}
+		
 
 
 

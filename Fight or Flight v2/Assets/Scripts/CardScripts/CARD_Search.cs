@@ -40,7 +40,9 @@ public class CARD_Search : Card {
 					loader.CheckBlankCard ();
 					if (loader.blankFound) {
 						loader.ReplaceBlankCard ();
+						search.DisableSearchable ();
 						loader.blankFound = false;
+
 					} else {
 						print ("No Blank Card in Hand");
 					}

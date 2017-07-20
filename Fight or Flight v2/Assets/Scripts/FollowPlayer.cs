@@ -14,8 +14,9 @@ public class FollowPlayer : MonoBehaviour {
 
 
 	void Update () {
-		
-		transform.position = new Vector3 (target.position.x + offSetX, transform.position.y, target.position.z + offSetZ);
+		if (target != null) {
+			transform.position = new Vector3 (target.position.x + offSetX, transform.position.y, target.position.z + offSetZ);
+		}
 	}
 
 

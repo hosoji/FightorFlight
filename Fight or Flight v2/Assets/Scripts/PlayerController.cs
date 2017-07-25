@@ -7,7 +7,7 @@ public class PlayerController: MonoBehaviour {
 
 	Vector3 pos;
 	public float speed; 
-	public float gridSize; 
+//	public float gridSize; 
 	public float turnAmount; 
 
 	public float energyCost = 1;
@@ -17,7 +17,7 @@ public class PlayerController: MonoBehaviour {
 
 	public static bool actionSuccessful = false;
 
-	public RaycastHit hit;
+	public RaycastHit hit = new RaycastHit();
 
 	KeyCode forward = KeyCode.W;
 	KeyCode turnRight = KeyCode.D;
@@ -26,7 +26,7 @@ public class PlayerController: MonoBehaviour {
 
 
 
-	private const float ANGLE_ROTATION = 30; 
+	private const float ANGLE_ROTATION = 10; 
 
 	enum Orientation{
 		NORTH,
@@ -68,11 +68,14 @@ public class PlayerController: MonoBehaviour {
 
 			Vector3 fwd = transform.TransformDirection(Vector3.forward); 
 
-			//		RaycastHit hit; 
 
-			if (Physics.Raycast (transform.position, fwd, out hit, gridSize)) { 
-				canMove = false; 
-				//      Debug.Log ("Player movement is blocked in this direction by " + hit.transform.name); 
+			if (Physics.Raycast (transform.position, fwd, out hit, GameManager.gridSize)) { 
+				if (hit.transform.tag == "Fire" || hit.transform.tag == "Penetrable") {
+					canMove = true;
+				} else {
+					canMove = false; 
+					//      Debug.Log ("Player movement is blocked in this direction by " + hit.transform.name); 
+				}
 			} else if (isRotating) { 
 				canMove = false; 
 			} else { 
@@ -143,8 +146,9 @@ public class PlayerController: MonoBehaviour {
 
 					if (!isRotating) { 
 						if (canMove) { 
-							pos = pos + (transform.forward * gridSize);  
-							GameManager.energy = GameManager.energy - energyCost; 
+							pos = pos + (transform.forward * GameManager.gridSize);  
+							GameManager.energy = GameManager.energy - energyCost;
+
 
 						} else { 
 
@@ -190,10 +194,10 @@ public class PlayerController: MonoBehaviour {
 
 		Vector3 fwd = transform.TransformDirection(Vector3.forward); 
 
-		if (Physics.Raycast (transform.position, fwd, out hit, gridSize)) {
+		if (Physics.Raycast (transform.position, fwd, out hit, GameManager.gridSize)) {
 			GameObject tempHit = hit.transform.gameObject;
 			tempHit.layer = 2;
-			if (Physics.Raycast (transform.position, fwd, out hit, gridSize * units)) {
+			if (Physics.Raycast (transform.position, fwd, out hit, GameManager.gridSize * units)) {
 				print ("Can't Climb Over");
 				tempHit.layer = 0;
 				actionSuccessful = false;
@@ -202,7 +206,7 @@ public class PlayerController: MonoBehaviour {
 				for (int i = 0; i < units; i++) {
 
 					if (!isRotating) { 
-						pos = pos + (transform.forward * gridSize);  
+						pos = pos + (transform.forward * GameManager.gridSize);  
 						//					print (endPlace.transform.name);
 
 					}
@@ -217,7 +221,7 @@ public class PlayerController: MonoBehaviour {
 			for (int i = 0; i < units; i++) {
 
 				if (!isRotating) { 
-					pos = pos + (transform.forward * gridSize);  
+					pos = pos + (transform.forward * GameManager.gridSize);  
 					//					print (endPlace.transform.name);
 
 				}

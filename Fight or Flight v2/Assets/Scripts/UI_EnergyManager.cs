@@ -12,10 +12,10 @@ public class UI_EnergyManager : MonoBehaviour {
 	void Update () {
 
 
-		float energyFill = UtilScript.remapRange (GameManager.energy, 0, 10, 0, 1);
+		float energyFill = UtilScript.remapRange (GameManager.energy, 0, 100, 0, 1);
 		energyAmount.fillAmount = energyFill;
 
-		float energyNum = GameManager.energy * 10;
+		float energyNum = GameManager.energy;
 
 		energyText.text = energyNum.ToString ();
 	}

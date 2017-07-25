@@ -9,6 +9,10 @@ public class GameManager : MonoBehaviour {
 
 	public static int composure;
 
+	public static float gridSize = 1.69f;
+
+	[SerializeField] public static float cooldownTime = 10f;
+
 	public int startValue = 20;
 	public static int maxValue = 30;
 

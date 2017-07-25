@@ -1,15 +1,51 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_EquipSlot : MonoBehaviour {
 
-	UI_MeterManager hud ;
+	Card card;
 
+	UI_MeterManager hud ;
+	GameObject gameManager;
+	GameObject cardManager;
+
+	bool coolDown = false;
+	float amountcoolDown = 0f;
 	void Start(){
-		GameObject gameManager = GameObject.FindGameObjectWithTag ("GameManager");
+		gameManager = GameObject.FindGameObjectWithTag ("GameManager");
+		cardManager = GameObject.FindGameObjectWithTag ("CardManager");
 
 		hud = gameManager.GetComponent<UI_MeterManager> ();
+
+
+	}
+
+	void Update(){
+
+
+		
+
+
+		if (coolDown) {
+			
+			if (card != null){
+
+				card = GetComponentInChildren<Card> ();
+				Image image = card.GetComponent<Image> (); 
+				image.fillMethod = Image.FillMethod.Horizontal;
+//				image.fillMethod =  Image.OriginHorizontal.Left;
+
+				amountcoolDown = amountcoolDown + Time.deltaTime; 
+				float newCoolDownTime = Mathf.Clamp01(UtilScript.remapRange (amountcoolDown, 0, GameManager.cooldownTime, 0,1 ));
+
+
+				image.fillAmount = newCoolDownTime;
+			}
+		}
+		
+		
 	}
 
 	public bool SlotAvailable(){
@@ -22,9 +58,22 @@ public class UI_EquipSlot : MonoBehaviour {
 		}
 	}
 
-	public void ActivateSlotFunction(){
-		Card card = GetComponentInChildren<Card> ();
+	public void RemoveCardfromSlot(){
+
+		card = GetComponentInChildren<Card> ();
 		if (card != null) {
+			UI_CardLoader loader = cardManager.GetComponent<UI_CardLoader> ();
+
+			card.mySlotState = Card.SlotState.CARD_SLOT;
+			loader.DeactivateCard (card.gameObject, true);
+
+		}
+		
+	}
+
+	public void ActivateSlotFunction(){
+		card = GetComponentInChildren<Card> ();
+		if (card != null && !coolDown) {
 			Debug.Log ("Card Name is: " + card.gameObject.name);
 
 			if (card.myCardType == Card.CardType.ACTION_CARD) {
@@ -35,6 +84,8 @@ public class UI_EquipSlot : MonoBehaviour {
 
 					if (PlayerController.actionSuccessful) {
 						hud.RemoveSegment (amount);
+						StartCoroutine (Cooldown ());
+
 
 						PlayerController.actionSuccessful = false;
 					}
@@ -53,6 +104,15 @@ public class UI_EquipSlot : MonoBehaviour {
 
 		}
 
+	}
+
+	IEnumerator Cooldown(){
+		
+		coolDown = true;
+		yield return new WaitForSeconds (GameManager.cooldownTime);
+		coolDown = false;
+		amountcoolDown = 0f;
+		
 	}
 
 }

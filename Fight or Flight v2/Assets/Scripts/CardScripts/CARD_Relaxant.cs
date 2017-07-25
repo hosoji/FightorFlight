@@ -6,7 +6,7 @@ public class CARD_Relaxant : Card {
 
 	const CardType type = CardType.CONSUMABLE_CARD;
 
-	public int rechargeAmount = 9;
+	public int rechargeAmount = 18;
 
 
 	void Start () {

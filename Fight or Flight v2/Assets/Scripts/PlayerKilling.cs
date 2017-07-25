@@ -4,16 +4,11 @@ using UnityEngine;
 
 public class PlayerKilling : MonoBehaviour {
 
-	// Use this for initialization
+
 	SceneChanger sceneChanger;
 	void Start () {
 		GameObject gameManager =GameObject.FindGameObjectWithTag ("GameManager");
 		sceneChanger = gameManager.GetComponent<SceneChanger> ();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 
 	void OnTriggerEnter(Collider coll){

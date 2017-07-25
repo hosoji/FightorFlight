@@ -4,78 +4,38 @@ using UnityEngine;
 
 public class FireController : MonoBehaviour {
 
-	public GameObject prefab;
-	GameObject movingGameObject;
-
-	Vector3 spiralPos;
-
-	public float myWidth;
-
-	public float speed;
-
-	public float gridSize;
-
-	List<Vector3> wayPoints = new List<Vector3>();
-
-	// Use this for initialization
-	void Start () {
-
-		SetWayPoints ();
-
-		Vector3 pos = transform.position + (Vector3.forward * gridSize);
-
-		movingGameObject = Instantiate (prefab, transform.position, Quaternion.identity);
+	[SerializeField] GameObject warningObject;
+	Vector3 pos;
 
 
-		for (int i = 1; i <= myWidth; i++) {
-			Vector3 width = new Vector3(transform.position.x + (gridSize * i),transform.position.y,transform.position.z);
-			GameObject g = Instantiate (prefab, width, Quaternion.identity);
-			g.gameObject.transform.SetParent (movingGameObject.transform);
+	Vector3[] directions =  new Vector3[4] {Vector3.forward, Vector3.back, Vector3.left, Vector3.right};
+	List <Vector3> availablePositions = new List <Vector3> ();
 
-		}
-
-	
-
-		spiralPos = movingGameObject.transform.position;
-		
+	void Start(){
 	}
-	
-	// Update is called once per frame
-	void Update () {
 
-		MoveTransform ();
+	public void SpreadWarning (){
 
+		RaycastHit hit;
 
-		if (movingGameObject.transform.position == spiralPos) {
-			if (Input.GetKeyDown (KeyCode.Space)) {
-				spiralPos = spiralPos + (transform.forward * gridSize);
+		for (int i = 0; i < directions.Length; i++) {
+			Vector3 direction = transform.TransformDirection(directions[i]);
+			if (Physics.Raycast(transform.position, direction, out hit, GameManager.gridSize)){
+				if (hit.transform.tag != "Fire") {
+					availablePositions.Add (direction);
+				}
 			}
 		}
 
+		Vector3 targetPos = availablePositions [Random.Range (0, availablePositions.Count)];
+		pos = transform.position + targetPos * GameManager.gridSize; 
+		Instantiate (warningObject, pos,Quaternion.identity);
+
+
 	
-
-
-
-
-
-	}
 		
-
-	void MoveTransform(){ 
-		movingGameObject.transform.position = Vector3.MoveTowards (movingGameObject.transform.position, spiralPos, Time.deltaTime * speed); 
-
-	} 
-
-	void SetWayPoints(){
-		wayPoints.Add (transform.position);
-		wayPoints.Add(transform.position + (transform.forward * gridSize));
-
-		for (int w = 0; w < wayPoints.Count; w++) {
-			print (wayPoints[w]);
-		}
-
-			
 	}
+
 
 
 

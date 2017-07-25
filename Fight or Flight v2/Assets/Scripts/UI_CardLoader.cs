@@ -16,6 +16,12 @@ public class UI_CardLoader : MonoBehaviour {
 
 	GameObject drawnCard;
 
+	public Text reloadCounter;
+
+	RectTransform rectTransform;
+
+	public GameObject blankPrefab;
+
 	public List <GameObject> deck = new List<GameObject>();
 	public List <GameObject> hand = new List<GameObject>();
 	public List <GameObject> pile = new List<GameObject>();
@@ -41,6 +47,8 @@ public class UI_CardLoader : MonoBehaviour {
 //			LoadDeck ();
 			ReloadDeck();
 		}
+
+		reloadCounter.text = tempDeck.Count.ToString ();
 	}
 
 
@@ -88,7 +96,7 @@ public class UI_CardLoader : MonoBehaviour {
 //			cards [i] = Instantiate(drawnCard,slots [i].transform.position,Quaternion.identity)  as GameObject;
 				cards [i] = drawnCard;
 
-				RectTransform rectTransform = cards [i].GetComponent<RectTransform> ();
+				rectTransform = cards [i].GetComponent<RectTransform> ();
 				UtilScript.AlignRectTransformToParent (rectTransform);
 
 				cards [i].transform.SetParent (slots [i].transform, false);
@@ -130,6 +138,17 @@ public class UI_CardLoader : MonoBehaviour {
 	void ReloadDeck(){
 		tempDeck.AddRange (pile);
 		pile.Clear ();
+		StatCounter.IncrementTotalDeckReload ();
+
+		AddBlankToDeck ();
+
+		//Fire Spread code - move to another script if necessary
+
+		GameObject[] fires = GameObject.FindGameObjectsWithTag ("Fire");
+		for (int i = 0; i < fires.Length; i++) {
+			fires [i].GetComponent<FireController> ().SpreadWarning ();
+		}
+
 	}
 
 	public void AddtoCarry(GameObject card){
@@ -138,15 +157,26 @@ public class UI_CardLoader : MonoBehaviour {
 	}
 
 	public void DeactivateCard(GameObject card, bool discarded){
-		hand.Remove (card);
+
+		if (hand.Contains (card)) {
+			hand.Remove (card);
+		}
+
+		if (equipped.Contains (card)) {
+			equipped.Remove (card);
+		}
+
 		card.SetActive (false);
 		card.transform.position = transform.position;
 		card.transform.SetParent (transform);
+
 
 		if (discarded) {
 			pile.Add (card);
 		}
 	}
+
+
 
 	public void CheckBlankCard( ){
 		for (int i = 0; i < slots.Length; i++) {
@@ -179,7 +209,9 @@ public class UI_CardLoader : MonoBehaviour {
 					newCard.transform.SetParent (slots [i].transform, false);
 					newCard.SetActive (true);
 					hand.Add (newCard);
+
 					searchables.Remove(searchables[rnd]);
+
 
 					DeactivateCard (card.gameObject, false);
 					break; 
@@ -197,6 +229,14 @@ public class UI_CardLoader : MonoBehaviour {
 			deckCard.SetActive (false);
 			target.Add (deckCard);
 		}
+	}
+
+	void AddBlankToDeck(){
+		GameObject blank = Instantiate (blankPrefab, transform.position, Quaternion.identity);
+		blank.transform.SetParent (transform);
+		blank.SetActive (false);
+		tempDeck.Add (blank);
+		
 	}
 
 }

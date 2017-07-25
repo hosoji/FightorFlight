@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FollowPlayer : MonoBehaviour {
 
-	public Transform target;
+	[SerializeField] Transform target;
 
 	public float offSetX, offSetZ;
 

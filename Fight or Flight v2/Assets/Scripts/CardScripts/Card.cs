@@ -7,12 +7,22 @@ using UnityEngine.UI;
 public class Card : MonoBehaviour {
 
 
+
+	const float EQ_W = 184f;
+	const float EQ_H = 56f;
+
+	const float CARD_W = 108.2f;
+	const float CARD_H = 109.9f;
+
+
+
 	Image cardImage;
 
 	public Sprite use, discard, energize, carry;
 
 	protected GameObject gameManager;
 	protected GameObject cardManager;
+
 
 
 	RectTransform rectTransform;
@@ -79,14 +89,14 @@ public class Card : MonoBehaviour {
 
 	protected virtual void Update(){
 
-		float w = 184f;
-		float h = 56f;
+
 
 		if (mySlotState == SlotState.CARD_SLOT) {
 			cardImage.sprite = cardSprite;
+			rectTransform.sizeDelta = new Vector2(CARD_W,CARD_H);
 		} else {
 			cardImage.sprite = equipSprite;
-			rectTransform.sizeDelta = new Vector2(w,h);
+			rectTransform.sizeDelta = new Vector2(EQ_W,EQ_H);
 		}
 	}
 		

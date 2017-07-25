@@ -21,8 +21,8 @@ public class CARD_Search : Card {
 
 	protected override void CardAbility (){
 		GameObject player = GameObject.FindGameObjectWithTag ("Player");
-		PlayerController control = player.GetComponent<PlayerController> ();
-
+//		PlayerController control = player.GetComponent<PlayerController> ();
+//
 		Vector3 fwd = player.transform.TransformDirection(Vector3.forward); 
 
 		RaycastHit hit;
@@ -31,7 +31,7 @@ public class CARD_Search : Card {
 		Transform t;
 
 
-		if (Physics.Raycast (player.transform.position, fwd, out hit, control.gridSize)) { 
+		if (Physics.Raycast (player.transform.position, fwd, out hit, GameManager.gridSize)) { 
 			
 			search = hit.transform.gameObject.GetComponent<Searchable> ();
 			t = hit.transform;

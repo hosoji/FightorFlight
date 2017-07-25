@@ -4,16 +4,28 @@ using UnityEngine;
 
 public class Rotating : MonoBehaviour {
 
-	public float speed =100f;
+	public float speedMin, speedMax;
+	float speed;
 
-	public GameObject prefab;
-	GameObject movingGameObject;
+//	public GameObject prefab;
+//	GameObject movingGameObject;
 
-	public float gridSize;
-	public float myHeight;
+//	public float gridSize;
+//	public float myHeight;
+	int direction;
 
 	// Use this for initialization
 	void Start () {
+
+		speed = (Random.Range(speedMin,speedMax));
+
+		int num = Random.Range (1, 11);
+
+		if (num >= 5) {
+			direction = 1;
+		} else {
+			direction = -1;
+		}
 //
 //		movingGameObject = Instantiate (prefab, transform.position, Quaternion.identity);
 //		movingGameObject.transform.SetParent (this.transform);
@@ -29,7 +41,7 @@ public class Rotating : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.Rotate(Vector3.up * (Time.deltaTime * speed), Space.World);
+		transform.Rotate(Vector3.up * (Time.deltaTime * speed * direction), Space.World);
 	}
 		
 }

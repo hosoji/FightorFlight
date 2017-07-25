@@ -17,7 +17,7 @@ public class UtilScript : MonoBehaviour {
 
 	public static int ConvertStringtoInt(string s){
 		int num;
-		bool result = int.TryParse (s, out num);
+		int.TryParse (s, out num);
 
 		return num;
 	}

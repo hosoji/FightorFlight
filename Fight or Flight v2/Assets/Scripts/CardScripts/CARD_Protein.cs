@@ -20,7 +20,7 @@ public class CARD_Protein : Card {
 
 	protected override void CardAbility (){
 
-		int n = UI_CardPanel.slotNum - 1;
+//		int n = UI_CardPanel.slotNum - 1;
 
 		if (GameManager.energy + energyValue <= GameManager.maxEnergy) {
 			GameManager.energy = GameManager.energy + energyValue;
